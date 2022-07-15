@@ -1,4 +1,4 @@
-#if defined(CONFIG_MTK_HDMI_SUPPORT)
+//#if defined(CONFIG_MTK_HDMI_SUPPORT)
 #include <linux/kernel.h>
 
 /*#include <linux/xlog.h>*/
@@ -12,25 +12,25 @@
 #include <linux/kthread.h>
 
 /*#include <mtk_kpd.h>*/
-#include "si_timing_defs.h"
+//#include "si_timing_defs.h"
 
 #include "hdmi_drv.h"
-#include "smartbook.h"
+//#include "smartbook.h"
 
 /*#include "hdmi_cust.h"*/
 /**
 * MHL TX Chip Driver User Layer Interface
 */
-extern struct mhl_dev_context *si_dev_context;
-extern void ForceSwitchToD3( struct mhl_dev_context *dev_context);
-extern void	ForceNotSwitchToD3(void);
-extern int si_mhl_tx_post_initialize(struct mhl_dev_context *dev_context, bool bootup);
-extern void siHdmiTx_VideoSel (int vmode);
-extern void siHdmiTx_AudioSel (int AduioMode);
-extern void set_platform_bitwidth(int bitWidth);
-extern bool si_mhl_tx_set_path_en_I(struct mhl_dev_context *dev_context);
-extern bool packed_pixel_available(struct mhl_dev_context *dev_context);
-extern void configure_and_send_audio_info(struct mhl_dev_context *dev_context, int audio_format);
+//extern struct mhl_dev_context *si_dev_context;
+//extern void ForceSwitchToD3( struct mhl_dev_context *dev_context);
+//extern void	ForceNotSwitchToD3(void);
+//extern int si_mhl_tx_post_initialize(struct mhl_dev_context *dev_context, bool bootup);
+//extern void siHdmiTx_VideoSel (int vmode);
+//extern void siHdmiTx_AudioSel (int AduioMode);
+//extern void set_platform_bitwidth(int bitWidth);
+//extern bool si_mhl_tx_set_path_en_I(struct mhl_dev_context *dev_context);
+//extern bool packed_pixel_available(struct mhl_dev_context *dev_context);
+//extern void configure_and_send_audio_info(struct mhl_dev_context *dev_context, int audio_format);
 
 //Should align to mhl_linux_tx.h
 #define	MHL_TX_EVENT_DISCONNECTION	0x01
@@ -46,8 +46,8 @@ extern void configure_and_send_audio_info(struct mhl_dev_context *dev_context, i
 /**
 * Platform Related Layer Interface
 */
-extern int HalOpenI2cDevice(char const *DeviceName, char const *DriverName);
-extern int32_t sii_8348_tx_init(void);    //Should  move to MHL TX Chip user layer
+//extern int HalOpenI2cDevice(char const *DeviceName, char const *DriverName);
+//extern int32_t sii_8348_tx_init(void);    //Should  move to MHL TX Chip user layer
 /**
 * LOG For MHL TX Chip HAL
 */
@@ -75,20 +75,20 @@ static int not_switch_to_d3 = 0;
 static int audio_enable = 0;
 
 #ifndef CONFIG_MTK_LEGACY 
-extern void i2s_gpio_ctrl(int enable);
-extern void dpi_gpio_ctrl(int enable);
+//extern void i2s_gpio_ctrl(int enable);
+//extern void dpi_gpio_ctrl(int enable);
 #endif
 
 void hdmi_drv_force_on(int from_uart_drv )
 {
     MHL_DBG("hdmi_drv_force_on %d\n", from_uart_drv);
 
-    if(from_uart_drv == 0)
-        ForceNotSwitchToD3();
+    //if(from_uart_drv == 0)
+        //ForceNotSwitchToD3();
     not_switch_to_d3 = 1;
 #ifndef CONFIG_MTK_LEGACY    
 //gpio:uart  to be impl
-    i2s_gpio_ctrl(0);
+    //i2s_gpio_ctrl(0);
 #endif
 }
  
@@ -243,9 +243,9 @@ void hdmi_drv_suspend(void) {return ;}
 void hdmi_drv_resume(void)  {return ;}
 static int hdmi_drv_audio_config(enum HDMI_AUDIO_FORMAT aformat, int bitWidth)
 {
-	set_platform_bitwidth(bitWidth);
-	siHdmiTx_AudioSel(aformat);
-	configure_and_send_audio_info(si_dev_context, aformat);
+	//set_platform_bitwidth(bitWidth);
+	//siHdmiTx_AudioSel(aformat);
+	//configure_and_send_audio_info(si_dev_context, aformat);
 	
 	return 0;
 }
@@ -266,10 +266,10 @@ static int hdmi_drv_audio_enable(bool enable)
         cust_hdmi_i2s_gpio_on(enable);
 */
 #else
-	if (enable)
+	/*if (enable)
 		i2s_gpio_ctrl(1);
 	else
-		i2s_gpio_ctrl(0);
+		i2s_gpio_ctrl(0);*/
 #endif
     audio_enable = enable;
 
@@ -284,28 +284,28 @@ extern void si_mhl_tx_drv_video_3d_update(struct mhl_dev_context *dev_context, i
 extern void si_mhl_tx_drv_video_3d(struct mhl_dev_context *dev_context, int video_3d);
 static int hdmi_drv_video_config(enum HDMI_VIDEO_RESOLUTION vformat, enum HDMI_VIDEO_INPUT_FORMAT vin, int vout)
 #else
-static int hdmi_drv_video_config(enum HDMI_VIDEO_RESOLUTION vformat, enum HDMI_VIDEO_INPUT_FORMAT vin, enum HDMI_VIDEO_OUTPUT_FORMAT vout)
+static int hdmi_drv_video_config(enum HDMI_VIDEO_RESOLUTION vformat, enum HDMI_VIDEO_INPUT_FORMAT vin, /*enum HDMI_VIDEO_OUTPUT_FORMAT*/int vout)
 #endif
 {
 	if(vformat == HDMI_VIDEO_720x480p_60Hz)
 	{
 		MHL_DBG("[hdmi_drv]480p\n");
-		siHdmiTx_VideoSel(HDMI_480P60_4X3);
+		//siHdmiTx_VideoSel(HDMI_480P60_4X3);
 	}
 	else if(vformat == HDMI_VIDEO_1280x720p_60Hz)
 	{
 		MHL_DBG("[hdmi_drv]720p\n");
-		siHdmiTx_VideoSel(HDMI_720P60);
+		//siHdmiTx_VideoSel(HDMI_720P60);
 	}
 	else if(vformat == HDMI_VIDEO_1920x1080p_30Hz)
 	{
-		MHL_DBG("[hdmi_drv]1080p_30 %p\n", si_dev_context);
-		siHdmiTx_VideoSel(HDMI_1080P30);
+		//MHL_DBG("[hdmi_drv]1080p_30 %p\n", si_dev_context);
+		//siHdmiTx_VideoSel(HDMI_1080P30);
 	}
 	else if(vformat == HDMI_VIDEO_1920x1080p_60Hz)
 	{
-		MHL_DBG("[hdmi_drv]1080p_60 %p\n", si_dev_context);
-		siHdmiTx_VideoSel(HDMI_1080P60);
+		//MHL_DBG("[hdmi_drv]1080p_60 %p\n", si_dev_context);
+		//siHdmiTx_VideoSel(HDMI_1080P60);
 	}
 	else
 	{
@@ -326,15 +326,15 @@ static int hdmi_drv_video_config(enum HDMI_VIDEO_RESOLUTION vformat, enum HDMI_V
 		if(vformat < HDMI_VIDEO_RESOLUTION_NUM)
 		{
 		    ///if(MHL_3D_Support && (MHL_3D_format > 0))
-		    si_mhl_tx_drv_video_3d(si_dev_context, MHL_3D_format);			
-            si_mhl_tx_set_path_en_I(si_dev_context);
+		    //si_mhl_tx_drv_video_3d(si_dev_context, MHL_3D_format);			
+            //si_mhl_tx_set_path_en_I(si_dev_context);
 		}
-		else
-		    si_mhl_tx_drv_video_3d_update(si_dev_context, MHL_3D_format);
+		//else
+		    //si_mhl_tx_drv_video_3d_update(si_dev_context, MHL_3D_format);
  	}
  #else
-    if(si_dev_context)
-    	si_mhl_tx_set_path_en_I(si_dev_context);
+    //if(si_dev_context)
+    	//si_mhl_tx_set_path_en_I(si_dev_context);
  #endif
     return 0;
 }
@@ -365,7 +365,7 @@ static int hdmi_drv_init(void)
 	/*cust_hdmi_power_on(true);*/
 	if(not_switch_to_d3 == 0) 
     {
-        HalOpenI2cDevice("Sil_MHL", "sii8348drv");
+        //HalOpenI2cDevice("Sil_MHL", "sii8348drv");
 	}
 	
 	txInitFlag = 0;
@@ -395,8 +395,8 @@ int hdmi_drv_power_on(void)
 	/*cust_hdmi_power_on(true);*/	
 	/*cust_hdmi_dpi_gpio_on(true);*/  
 #else
-	dpi_gpio_ctrl(1);
-	i2s_gpio_ctrl(1);
+	//dpi_gpio_ctrl(1);
+	//i2s_gpio_ctrl(1);
 #endif	
     //cust_hdmi_i2s_gpio_on(true);   
     
@@ -454,16 +454,16 @@ void hdmi_drv_power_off(void)
     if(audio_enable == 0)
 	    cust_hdmi_i2s_gpio_on(false);
 #else
-    dpi_gpio_ctrl(0);
-	i2s_gpio_ctrl(0);
-    if(audio_enable == 0)
-	    i2s_gpio_ctrl(1);
+    //dpi_gpio_ctrl(0);
+	//i2s_gpio_ctrl(0);
+    //if(audio_enable == 0)
+	    //i2s_gpio_ctrl(1);
 #endif
   	return ;
 	
     if(ReadConnectionStatus()==1){
         need_reset_usb_switch = true;
-    	 ForceSwitchToD3(si_dev_context);
+    	//ForceSwitchToD3(si_dev_context);
     }
     else
         need_reset_usb_switch = false;
@@ -477,8 +477,8 @@ void hdmi_drv_power_off(void)
 /* for otg currency leakage */
 void switch_mhl_to_d3(void)
 {    
-    if(si_dev_context)
-        ForceSwitchToD3(si_dev_context);
+    //if(si_dev_context)
+    //    ForceSwitchToD3(si_dev_context);
 }
 static unsigned int pal_resulution = 0;
 void update_av_info_edid(bool audio_video, unsigned int param1, unsigned int param2)
@@ -492,7 +492,7 @@ void update_av_info_edid(bool audio_video, unsigned int param1, unsigned int par
             	pal_resulution |= SINK_1080P30;
             	break;
             case 0x10:
-            	if(packed_pixel_available(si_dev_context))
+            	//if(packed_pixel_available(si_dev_context))
                 	pal_resulution |= SINK_1080P60;
             	break;
             case 0x4:
@@ -524,6 +524,7 @@ void reset_av_info(void)
 }
 void hdmi_GetEdidInfo(void *pv_get_info)
 {
+#if 0
     struct HDMI_EDID_INFO_T *ptr = (struct HDMI_EDID_INFO_T *)pv_get_info;
     if(ptr)
     {
@@ -545,23 +546,23 @@ void hdmi_GetEdidInfo(void *pv_get_info)
         MHL_DBG("MHL hdmi_GetEdidInfo ntsc 0x%x,pal: 0x%x, packed: %d, parsed 0x%x\n", ptr->ui4_ntsc_resolution  , 
         	ptr->ui4_pal_resolution, packed_pixel_available(si_dev_context), si_mhl_get_av_info());
     }
-
+#endif
 }
 
 
-extern uint8_t  Cap_MAX_channel;
-extern uint16_t Cap_SampleRate;
-extern uint8_t  Cap_Samplebit;
+//extern uint8_t  Cap_MAX_channel;
+//extern uint16_t Cap_SampleRate;
+//extern uint8_t  Cap_Samplebit;
 
 int hdmi_drv_get_external_device_capablity(void)
 {
 	int capablity = 0;
-	MHL_DBG("Cap_MAX_channel: %d, Cap_Samplebit: %d, Cap_SampleRate: %d\n", Cap_MAX_channel, Cap_Samplebit, Cap_SampleRate);
-	capablity = Cap_MAX_channel << 3 | Cap_SampleRate << 7 | Cap_Samplebit << 10;
+	//MHL_DBG("Cap_MAX_channel: %d, Cap_Samplebit: %d, Cap_SampleRate: %d\n", Cap_MAX_channel, Cap_Samplebit, Cap_SampleRate);
+	//capablity = Cap_MAX_channel << 3 | Cap_SampleRate << 7 | Cap_Samplebit << 10;
 
 	if(capablity == 0)
 	{
-		capablity = HDMI_CHANNEL_2 << 3 | HDMI_SAMPLERATE_44 << 7 |  HDMI_BITWIDTH_16 << 10;
+		//capablity = HDMI_CHANNEL_2 << 3 | HDMI_SAMPLERATE_44 << 7 |  HDMI_BITWIDTH_16 << 10;
 	}
 
 	return capablity;
